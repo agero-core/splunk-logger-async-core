@@ -54,9 +54,6 @@ namespace Agero.Core.SplunkLogger.Async.Core.Tests
             var logger = CreateLogger("http://localhost/Wrong/");
             
             var builder = new HostBuilder()
-                .ConfigureAppConfiguration((hostingContext, config) =>
-                {
-                })
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<LoggerProcessor>();
@@ -83,9 +80,6 @@ namespace Agero.Core.SplunkLogger.Async.Core.Tests
             var logger = CreateLogger(_splunkCollectorInfo.SplunkCollectorUrl));
             
             var builder = new HostBuilder()
-                .ConfigureAppConfiguration((hostingContext, config) =>
-                {
-                })
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<LoggerProcessor>();
