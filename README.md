@@ -6,15 +6,24 @@ Splunk Logger is a **.NET Core** library for logging to Splunk using HTTP collec
 
 Register **LoggerProcessor** in the app's dependency injection container with [ConfigureServices](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/generic-host?view=aspnetcore-2.1#configureservices):
 
-**In .Net Core application:**
+In .NET Core application:
 ```csharp
 var builder = new HostBuilder()
 	.ConfigureServices((hostContext, services) =>
 	{
 		services.AddHostedService<LoggerProcessor>();
 	}).Build();
-	
+
 builder.StartAsync();
+```
+
+In ASP.NET Core application:
+```csharp
+ public void ConfigureServices(IServiceCollection services)
+{
+	services.AddHostedService<LoggerProcessor>();
+}
+```
 
 Create instance:
 ```csharp
