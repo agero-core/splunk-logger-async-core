@@ -15,88 +15,30 @@ namespace Agero.Core.SplunkLogger.Async.Core
     /// <summary>
     /// Exposes Background Service Implementation
     /// </summary>
-    public class LoggerProcessor : BackgroundService, ILoggerProcessor
+    public class LoggerProcessor : BackgroundService
     {
-        private static readonly BlockingCollection<LogItem> _logQueue = LoggerAsync.LogQueue;
+        private ILoggerBackgroundTaskQueue _taskQueue => LoggerAsync.LoggerBackgroundTaskQueue;
 
-        private static IReadOnlyContainer _container => DIContainer.Instance;
-
-        private const int QueueReadTimeout = 1000;
-
-        private CancellationTokenSource _shutdown =
-            new CancellationTokenSource();
-
-        private Task _backgroundTask;
-
-        private readonly ILogger _logger;
-
-        public LoggerProcessor(IBackgroundTaskQueue taskQueue,
-            ILogger<QueuedHostedService> logger)
+        /// <inheritdoc />
+        /// <summary>
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            TaskQueue = taskQueue;
-            _logger = logger;
-        }
-
-        public IBackgroundTaskQueue TaskQueue { get; }
-
-        public Task StartAsync(CancellationToken cancellationToken)
-        {
-            //_logger.LogInformation("Queued Hosted Service is starting.");
-
-            _backgroundTask = Task.Run(BackgroundProceessing);
-
-            return Task.CompletedTask;
-        }
-
-        private async Task BackgroundProceessing()
-        {
-            while (!_shutdown.IsCancellationRequested)
+            while (!cancellationToken.IsCancellationRequested)
             {
-                    try
-                    {
-                        if (!_logQueue.TryTake(out var logItem, millisecondsTimeout: QueueReadTimeout))
-                            continue;
+                var workItem = await _taskQueue.DequeueAsync(cancellationToken);
 
-                        _container.Get<ILogger>().Log(logItem.Type, logItem.Message, logItem.Data, logItem.CorrelationId);
-                    }
-                    catch (Exception exception)
-                    {
-                        LogTrace(exception.ToString());
-                    }
-                }
-        }
-
-        /*protected override Task ExecuteAsync(CancellationToken stoppingToken)
-        {
-            Task.Run(() =>
-            {
-                while (!stoppingToken.IsCancellationRequested)
+                try
                 {
-                    try
-                    {
-                        if (!_logQueue.TryTake(out var logItem, millisecondsTimeout: QueueReadTimeout))
-                            continue;
-
-                        _container.Get<ILogger>().Log(logItem.Type, logItem.Message, logItem.Data, logItem.CorrelationId);
-                    }
-                    catch (Exception exception)
-                    {
-                        LogTrace(exception.ToString());
-                    }
+                    await workItem(cancellationToken);
                 }
-            });
-
-          return Task.CompletedTask;
-        }*/
-
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-           // _logger.LogInformation("Queued Hosted Service is stopping.");
-
-            _shutdown.Cancel();
-
-            return Task.WhenAny(_backgroundTask,
-                Task.Delay(Timeout.Infinite, cancellationToken));
+                catch (Exception ex)
+                {
+                    LogTrace(ex.ToString());
+                }
+            }
         }
 
         private void LogTrace(string exceptionMessage)

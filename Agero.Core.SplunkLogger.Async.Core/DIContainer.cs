@@ -5,7 +5,7 @@ namespace Agero.Core.SplunkLogger.Async.Core
 {
     internal class DIContainer
     {
-        private static readonly SyncLazy<IContainer> _container = new SyncLazy<IContainer>(CreateContainer);
+        private static readonly SyncLazy<IContainer> Container = new SyncLazy<IContainer>(CreateContainer);
 
         private static IContainer CreateContainer()
         {
@@ -14,6 +14,6 @@ namespace Agero.Core.SplunkLogger.Async.Core
             return container;
         }
 
-        public static IContainer Instance => _container.Value;
+        public static IContainer Instance => Container.Value;
     }
 }

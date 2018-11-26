@@ -1,22 +1,13 @@
 ﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Diagnostics;
-using System.Collections.Concurrent;
 using Agero.Core.Checker;
 using Agero.Core.DIContainer;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json;
 
 namespace Agero.Core.SplunkLogger.Async.Core
 {
     /// <summary>Logger which supports asynchronous message submit</summary>
     public class LoggerAsync : ILoggerAsync
     {
-        private const int QueueReadTimeout = 1000;
-
-        internal static readonly BlockingCollection<LogItem> LogQueue = new BlockingCollection<LogItem>();
+        internal static readonly LoggerBackgroundTaskQueue LoggerBackgroundTaskQueue = new LoggerBackgroundTaskQueue();
 
         private static readonly IContainer Container = DIContainer.Instance;
 
@@ -38,28 +29,11 @@ namespace Agero.Core.SplunkLogger.Async.Core
             if(Container.Contains<ILogger>())
                 Container.Remove<ILogger>();
 
-            var host = new HostBuilder()
-                .ConfigureAppConfiguration((hostContext, config) =>
-                {
-                })
-                .ConfigureServices((hostContext, services) =>
-                {
-                    services.AddLogging();
-                    services.AddSingleton<ILogger>();
-
-                    #region snippet3
-                    services.AddHostedService<QueuedHostedService>();
-                    services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
-                    #endregion
-                })
-                .UseConsoleLifetime()
-                .Build();
-
             Container.RegisterInstance<ILogger>(new Logger(collectorUri, authorizationToken, applicationName, applicationVersion, timeout));
         }
 
         /// <summary>Number of items to be processed</summary>
-        public int PendingLogCount => LogQueue.Count;
+        public int PendingLogCount => LoggerBackgroundTaskQueue.Count;
 
         /// <summary>Submits log to Splunk</summary>
         /// <param name="type">Log type (Error, Info, etc.)</param>
@@ -67,7 +41,13 @@ namespace Agero.Core.SplunkLogger.Async.Core
         /// <param name="data">Any object which serialized into JSON</param>
         /// <param name="correlationId">Correlation ID for synchronizing different messages</param>
         /// <remarks>If submitting to Splunk fails then log is submitted to Windows Event Log</remarks>
-        public void Log(string type, string message, object data = null, string correlationId = null) => LogQueue.Add(new LogItem(type, message, data, correlationId));
+        public void Log(string type, string message, object data = null, string correlationId = null)
+        {
+            LoggerBackgroundTaskQueue.QueueBackgroundWorkItem(async token =>
+            {
+                    await Container.Get<ILogger>().LogAsync(type, message, data, correlationId);
+            });
+        } 
 
         /// <summary>Disposes current object</summary>
         public void Dispose()

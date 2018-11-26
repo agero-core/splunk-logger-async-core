@@ -5,20 +5,12 @@ using System.Threading.Tasks;
 
 namespace Agero.Core.SplunkLogger.Async.Core
 {
-    public interface IBackgroundTaskQueue
+    internal class LoggerBackgroundTaskQueue : ILoggerBackgroundTaskQueue
     {
-        void QueueBackgroundWorkItem(Func<CancellationToken, Task> workItem);
-
-        Task<Func<CancellationToken, Task>> DequeueAsync(
-            CancellationToken cancellationToken);
-    }
-
-    public class BackgroundTaskQueue : IBackgroundTaskQueue
-    {
-        private ConcurrentQueue<Func<CancellationToken, Task>> _workItems =
+        private readonly ConcurrentQueue<Func<CancellationToken, Task>> _workItems =
             new ConcurrentQueue<Func<CancellationToken, Task>>();
 
-        private SemaphoreSlim _signal = new SemaphoreSlim(0);
+        private readonly SemaphoreSlim _signal = new SemaphoreSlim(2);
 
         public void QueueBackgroundWorkItem(Func<CancellationToken, Task> workItem)
         {
@@ -38,5 +30,7 @@ namespace Agero.Core.SplunkLogger.Async.Core
 
             return workItem;
         }
+
+        public int Count => _workItems.Count;
     }
 }

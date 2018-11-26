@@ -61,15 +61,14 @@ namespace Agero.Core.SplunkLogger.Async.Core.Tests
                     })
                     .ConfigureServices((hostContext, services) =>
                     {
-                        services.AddOptions();
-                        services.AddSingleton<IHostedService, LoggerProcessor>();
-                        services.AddSingleton<IHostedService, LoggerProcessor>();
+                        services.AddHostedService<LoggerProcessor>();
+                        services.AddHostedService<LoggerProcessor>();
                     }).Build();
 
                 builder.StartAsync();
 
                 // Act
-                LogError(logger, 10);
+                LogError(logger, 100);
                 Thread.Sleep(10_000);
                 builder.StopAsync();
 
@@ -93,15 +92,13 @@ namespace Agero.Core.SplunkLogger.Async.Core.Tests
                     })
                     .ConfigureServices((hostContext, services) =>
                     {
-                        services.AddOptions();
-                        services.AddSingleton<IHostedService, LoggerProcessor>();
-                        services.AddSingleton<IHostedService, LoggerProcessor>();
+                        services.AddHostedService<LoggerProcessor>();
                     }).Build();
 
                 builder.StartAsync();
 
                 // Act
-                LogError(logger, 10); 
+                LogError(logger, 3); 
                 Thread.Sleep(10_000);
                 builder.StopAsync();
 
