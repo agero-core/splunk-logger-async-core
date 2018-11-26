@@ -7,8 +7,7 @@ namespace Agero.Core.SplunkLogger.Async.Core
 {
     internal class LoggerBackgroundTaskQueue : ILoggerBackgroundTaskQueue
     {
-        private readonly ConcurrentQueue<Func<CancellationToken, Task>> _workItems =
-            new ConcurrentQueue<Func<CancellationToken, Task>>();
+        private readonly ConcurrentQueue<Func<CancellationToken, Task>> _workItems = new ConcurrentQueue<Func<CancellationToken, Task>>();
 
         private readonly SemaphoreSlim _signal = new SemaphoreSlim(2);
 

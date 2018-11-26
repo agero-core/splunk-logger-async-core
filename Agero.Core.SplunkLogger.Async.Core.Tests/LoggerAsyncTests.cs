@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
 using Agero.Core.Checker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -42,8 +41,7 @@ namespace Agero.Core.SplunkLogger.Async.Core.Tests
 
             for (var i = 0; i < iterationCount; i++)
             {
-                logger.Log("Error", $"Error {i} from thread {i}");
-                Console.WriteLine($"Thread - 1, iteration - {i}");
+                logger.Log("Error", $"Error {i} from LoggerProcessor");
                 Thread.Sleep(1);
             }
         }
@@ -52,61 +50,57 @@ namespace Agero.Core.SplunkLogger.Async.Core.Tests
         [TestCategory("Ignore")]
         public void MultiThreading_Test_When_Invalid_Collector_Url()
         {
-            using (var logger = CreateLogger("http://localhost/Wrong/"))
-            {
-                //Arrange
-                var builder = new HostBuilder()
-                    .ConfigureAppConfiguration((hostingContext, config) =>
-                    {
-                    })
-                    .ConfigureServices((hostContext, services) =>
-                    {
-                        services.AddHostedService<LoggerProcessor>();
-                        services.AddHostedService<LoggerProcessor>();
-                    }).Build();
+            //Arrange
+            var logger = CreateLogger("http://localhost/Wrong/");
+            
+            var builder = new HostBuilder()
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                })
+                .ConfigureServices((hostContext, services) =>
+                {
+                    services.AddHostedService<LoggerProcessor>();
+                    services.AddHostedService<LoggerProcessor>();
+                }).Build();
 
-                builder.StartAsync();
+            builder.StartAsync();
 
-                // Act
-                LogError(logger, 100);
-                Thread.Sleep(10_000);
-                builder.StopAsync();
+            // Act
+            LogError(logger, 10);
+            Thread.Sleep(10_000);
+            builder.StopAsync();
 
-                // Assert
-                Assert.AreEqual(0, logger.PendingLogCount);
-            }
-
-            Thread.Sleep(1500);
+            // Assert
+            Assert.AreEqual(0, logger.PendingLogCount);
+ 
         }
 
         [TestMethod]
         [TestCategory("Ignore")]
         public void MultiThreading_Test_When_Valid_Collector_Url()
         {
-            using (var logger = CreateLogger(_splunkCollectorInfo.SplunkCollectorUrl))
-            {
-                //Arrange
-                var builder = new HostBuilder()
-                    .ConfigureAppConfiguration((hostingContext, config) =>
-                    {
-                    })
-                    .ConfigureServices((hostContext, services) =>
-                    {
-                        services.AddHostedService<LoggerProcessor>();
-                    }).Build();
+            //Arrange
+            var logger = CreateLogger(_splunkCollectorInfo.SplunkCollectorUrl));
+            
+            var builder = new HostBuilder()
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                })
+                .ConfigureServices((hostContext, services) =>
+                {
+                    services.AddHostedService<LoggerProcessor>();
+                    services.AddHostedService<LoggerProcessor>();
+                }).Build();
 
-                builder.StartAsync();
+            builder.StartAsync();
 
-                // Act
-                LogError(logger, 3); 
-                Thread.Sleep(10_000);
-                builder.StopAsync();
+            // Act
+            LogError(logger, 3); 
+            Thread.Sleep(10_000);
+            builder.StopAsync();
 
-                // Assert
-                Assert.AreEqual(0, logger.PendingLogCount);
-            }
-
-            Thread.Sleep(1500);
+            // Assert
+            Assert.AreEqual(0, logger.PendingLogCount);
         }
     }
 }

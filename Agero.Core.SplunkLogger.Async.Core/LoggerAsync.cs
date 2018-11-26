@@ -9,7 +9,7 @@ namespace Agero.Core.SplunkLogger.Async.Core
     {
         internal static readonly LoggerBackgroundTaskQueue LoggerBackgroundTaskQueue = new LoggerBackgroundTaskQueue();
 
-        private static readonly IContainer Container = DIContainer.Instance;
+        private readonly ILogger _logger;
 
         /// <summary>Constructor</summary>
         /// <param name="collectorUri">Splunk HTTP collector URL</param>
@@ -26,10 +26,7 @@ namespace Agero.Core.SplunkLogger.Async.Core
             Check.ArgumentIsNullOrWhiteSpace(applicationVersion, nameof(applicationVersion));
             Check.Argument(timeout > 0, "timeout > 0");
 
-            if(Container.Contains<ILogger>())
-                Container.Remove<ILogger>();
-
-            Container.RegisterInstance<ILogger>(new Logger(collectorUri, authorizationToken, applicationName, applicationVersion, timeout));
+            _logger = new Logger(collectorUri, authorizationToken, applicationName, applicationVersion, timeout);
         }
 
         /// <summary>Number of items to be processed</summary>
@@ -45,9 +42,12 @@ namespace Agero.Core.SplunkLogger.Async.Core
         {
             LoggerBackgroundTaskQueue.QueueBackgroundWorkItem(async token =>
             {
-                    await Container.Get<ILogger>().LogAsync(type, message, data, correlationId);
+                await _logger.LogAsync(type,
+                    message,
+                    data,
+                    correlationId);
             });
-        } 
+        }
 
         /// <summary>Disposes current object</summary>
         public void Dispose()
