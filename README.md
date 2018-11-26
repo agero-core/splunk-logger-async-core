@@ -1,8 +1,21 @@
 # splunk-logger-async-core
 
-Splunk Logger is a **.NET Core** library for logging to Splunk using HTTP collector, **asynchronously**. It automatically collects environment information and adds it to log.
+Splunk Logger is a **.NET Core** library for logging to Splunk using HTTP collector, **asynchronously**. The logging is implemented as a background task that uses hosted services introduced in .NET Core. It automatically collects environment information and adds it to log.
 
 ## Usage:
+
+Register **LoggerProcessor** in the app's dependency injection container with [ConfigureServices](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/generic-host?view=aspnetcore-2.1#configureservices):
+
+**In .Net Core application:**
+```csharp
+var builder = new HostBuilder()
+	.ConfigureServices((hostContext, services) =>
+	{
+		services.AddHostedService<LoggerProcessor>();
+	}).Build();
+	
+builder.StartAsync();
+
 Create instance:
 ```csharp
 ILoggerAsync logger = 
