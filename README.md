@@ -7,14 +7,16 @@ The logging is implemented as a background task that uses [hosted services](http
 
 ## Usage:
 
-Register **LoggerProcessor** in the app's dependency injection container with [ConfigureServices](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/generic-host?view=aspnetcore-2.1#configureservices). 
+Register **LoggerProcessor** in the app's dependency injection container with [ConfigureServices](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/generic-host?view=aspnetcore-2.1#configureservices). If you require multiple background threads running for logging, register additional **LoggerProcessor**'s.
 
 In .NET Core application:
 ```csharp
 var builder = new HostBuilder()
 	.ConfigureServices((hostContext, services) =>
 	{
+		//Registers two background LoggerProcessor tasks
 		services.AddHostedService<LoggerProcessor>();  
+		services.AddHostedService<LoggerProcessor>(); 
 	})
 	.Build();
 
@@ -25,6 +27,8 @@ In ASP.NET Core application:
 ```csharp
 public void ConfigureServices(IServiceCollection services)
 {
+	//Registers two background LoggerProcessor tasks
+	services.AddHostedService<LoggerProcessor>();
 	services.AddHostedService<LoggerProcessor>();
 }
 ```
