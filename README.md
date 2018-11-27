@@ -11,14 +11,15 @@ Register **LoggerProcessor** in the app's dependency injection container with [C
 
 In .NET Core application:
 ```csharp
-var builder = new HostBuilder()
-	.ConfigureServices((hostContext, services) =>
-	{
-		//Registers two background LoggerProcessor tasks
-		services.AddHostedService<LoggerProcessor>();  
-		services.AddHostedService<LoggerProcessor>(); 
-	})
-	.Build();
+var builder = 
+	new HostBuilder()
+		.ConfigureServices((hostContext, services) =>
+		{
+			//Registers two background LoggerProcessor tasks
+			services.AddHostedService<LoggerProcessor>();  
+			services.AddHostedService<LoggerProcessor>(); 
+		})
+		.Build();
 
 builder.StartAsync();
 ```
