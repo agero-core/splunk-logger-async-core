@@ -3,7 +3,7 @@
 namespace Agero.Core.SplunkLogger.Async.Core
 {
     /// <summary>Logger which supports asynchronous message submit</summary>
-    public interface ILoggerAsync
+    public interface ILoggerAsync : IDisposable
     {
         /// <summary>Submits log to Splunk</summary>
         /// <param name="type">Log type (Error, Info, etc.)</param>

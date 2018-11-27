@@ -31,5 +31,7 @@ namespace Agero.Core.SplunkLogger.Async.Core
         }
 
         public int Count => _workItems.Count;
+
+        public void ClearWorkItems() => _workItems.Clear();
     }
 }

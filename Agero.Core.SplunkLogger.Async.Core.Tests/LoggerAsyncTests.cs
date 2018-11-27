@@ -50,51 +50,56 @@ namespace Agero.Core.SplunkLogger.Async.Core.Tests
         [TestCategory("Ignore")]
         public void MultiThreading_Test_When_Invalid_Collector_Url()
         {
-            //Arrange
-            var logger = CreateLogger("http://localhost/Wrong/");
-            
-            var builder = new HostBuilder()
-                .ConfigureServices((hostContext, services) =>
-                {
-                    services.AddHostedService<LoggerProcessor>();
-                    services.AddHostedService<LoggerProcessor>();
-                }).Build();
+            using (var logger = CreateLogger("http://localhost/Wrong/"))
+            {
+                //Arrange
+                var builder = new HostBuilder()
+                    .ConfigureServices((hostContext, services) =>
+                    {
+                        services.AddHostedService<LoggerProcessor>();
+                        services.AddHostedService<LoggerProcessor>();
+                    }).Build();
 
-            builder.StartAsync();
+                builder.StartAsync();
 
-            // Act
-            LogError(logger, 10);
-            Thread.Sleep(10_000);
-            builder.StopAsync();
+                // Act
+                LogError(logger, 10);
+                Thread.Sleep(10_000);
+                builder.StopAsync();
 
-            // Assert
-            Assert.AreEqual(0, logger.PendingLogCount);
- 
+                // Assert
+                Assert.AreEqual(0, logger.PendingLogCount);
+            }
+
+            Thread.Sleep(1500);
         }
 
         [TestMethod]
         [TestCategory("Ignore")]
         public void MultiThreading_Test_When_Valid_Collector_Url()
         {
-            //Arrange
-            var logger = CreateLogger(_splunkCollectorInfo.SplunkCollectorUrl));
-            
-            var builder = new HostBuilder()
-                .ConfigureServices((hostContext, services) =>
-                {
-                    services.AddHostedService<LoggerProcessor>();
-                    services.AddHostedService<LoggerProcessor>();
-                }).Build();
+            using (var logger = CreateLogger(_splunkCollectorInfo.SplunkCollectorUrl))
+            {
+                //Arrange
+                var builder = new HostBuilder()
+                    .ConfigureServices((hostContext, services) =>
+                    {
+                        services.AddHostedService<LoggerProcessor>();
+                        services.AddHostedService<LoggerProcessor>();
+                    }).Build();
 
-            builder.StartAsync();
+                builder.StartAsync();
 
-            // Act
-            LogError(logger, 3); 
-            Thread.Sleep(10_000);
-            builder.StopAsync();
+                // Act
+                LogError(logger, 10);
+                Thread.Sleep(10_000);
+                builder.StopAsync();
 
-            // Assert
-            Assert.AreEqual(0, logger.PendingLogCount);
+                // Assert
+                Assert.AreEqual(0, logger.PendingLogCount);
+            }
+
+            Thread.Sleep(1500);
         }
     }
 }

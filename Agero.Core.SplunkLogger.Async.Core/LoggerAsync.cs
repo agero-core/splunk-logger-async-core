@@ -50,9 +50,6 @@ namespace Agero.Core.SplunkLogger.Async.Core
         }
 
         /// <summary>Disposes current object</summary>
-        public void Dispose()
-        {
-            //
-        }
+        public void Dispose() => LoggerBackgroundTaskQueue.ClearWorkItems();
     }
 }
