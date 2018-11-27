@@ -8,6 +8,7 @@ obj/
 /packages
 /NuGet
 /TestResults
+/wwwroot
 
 *.user
 *.vspscc
