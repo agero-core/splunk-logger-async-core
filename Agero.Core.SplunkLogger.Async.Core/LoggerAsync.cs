@@ -40,12 +40,7 @@ namespace Agero.Core.SplunkLogger.Async.Core
         public void Log(string type, string message, object data = null, string correlationId = null)
         {
             LoggerBackgroundTaskQueue.QueueBackgroundWorkItem(async token =>
-            {
-                await _logger.LogAsync(type,
-                    message,
-                    data,
-                    correlationId);
-            });
+                await _logger.LogAsync(type, message, data, correlationId));
         }
 
         /// <summary>Disposes current object</summary>
