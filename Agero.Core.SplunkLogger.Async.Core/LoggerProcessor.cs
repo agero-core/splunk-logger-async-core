@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Agero.Core.Checker;
-using Agero.Core.DIContainer;
 using Agero.Core.SplunkLogger.Helpers;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;

@@ -1,6 +1,5 @@
 ﻿using System;
 using Agero.Core.Checker;
-using Agero.Core.DIContainer;
 
 namespace Agero.Core.SplunkLogger.Async.Core
 {
