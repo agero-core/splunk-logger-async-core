@@ -3,8 +3,8 @@ using Agero.Core.Checker;
 
 namespace Agero.Core.SplunkLogger.Async.Core
 {
-    /// <summary>Logger which supports asynchronous message submit</summary>
-    public class LoggerAsync : ILoggerAsync
+    /// <summary>Asynchronous Splunk Logger</summary>
+    public class AsyncLogger : IAsyncLogger
     {
         internal static readonly LoggerBackgroundTaskQueue LoggerBackgroundTaskQueue = new LoggerBackgroundTaskQueue();
 
@@ -15,9 +15,8 @@ namespace Agero.Core.SplunkLogger.Async.Core
         /// <param name="authorizationToken">Splunk authorization token</param>
         /// <param name="applicationName">Unique application name</param>
         /// <param name="applicationVersion">Application version</param>
-        /// <param name="timeout">Splunk HTTP collector timeout</param>
-        /// 
-        public LoggerAsync(Uri collectorUri, string authorizationToken, string applicationName, string applicationVersion, int timeout = 10000)
+        /// <param name="timeout">Splunk HTTP collector timeout (milliseconds)</param>
+        public AsyncLogger(Uri collectorUri, string authorizationToken, string applicationName, string applicationVersion, int timeout = 10000)
         {
             Check.ArgumentIsNull(collectorUri, nameof(collectorUri));
             Check.ArgumentIsNullOrWhiteSpace(authorizationToken, nameof(authorizationToken));
@@ -31,12 +30,11 @@ namespace Agero.Core.SplunkLogger.Async.Core
         /// <summary>Number of items to be processed</summary>
         public int PendingLogCount => LoggerBackgroundTaskQueue.Count;
 
-        /// <summary>Submits log to Splunk</summary>
+        /// <summary>Submits log to Splunk asynchronously</summary>
         /// <param name="type">Log type (Error, Info, etc.)</param>
         /// <param name="message">Log text message</param>
-        /// <param name="data">Any object which serialized into JSON</param>
-        /// <param name="correlationId">Correlation ID for synchronizing different messages</param>
-        /// <remarks>If submitting to Splunk fails then log is submitted to Windows Event Log</remarks>
+        /// <param name="data">Any object which will be serialized into JSON</param>
+        /// <param name="correlationId">Any optional string which can correlate different logs</param>
         public void Log(string type, string message, object data = null, string correlationId = null)
         {
             LoggerBackgroundTaskQueue.QueueBackgroundWorkItem(async token =>

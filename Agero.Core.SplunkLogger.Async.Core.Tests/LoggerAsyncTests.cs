@@ -22,11 +22,11 @@ namespace Agero.Core.SplunkLogger.Async.Core.Tests
             _splunkCollectorInfo = JsonConvert.DeserializeObject<LoggerAsyncTestsSetup>(File.ReadAllText(@"logger-settings.json"));
         }
 
-        private static LoggerAsync CreateLogger(string collectorUrl)
+        private static AsyncLogger CreateLogger(string collectorUrl)
         {
             Check.ArgumentIsNullOrWhiteSpace(collectorUrl, nameof(collectorUrl));
 
-            return new LoggerAsync(
+            return new AsyncLogger(
                 collectorUri: new Uri(collectorUrl),
                 authorizationToken: _splunkCollectorInfo.AuthenticationToken,
                 applicationName: "Test",
@@ -34,7 +34,7 @@ namespace Agero.Core.SplunkLogger.Async.Core.Tests
                 timeout: 10000);
         }
 
-        private static void LogError(ILoggerAsync logger, int iterationCount = 10)
+        private static void LogError(IAsyncLogger logger, int iterationCount = 10)
         {
             Check.ArgumentIsNull(logger, nameof(logger));
             Check.Argument(iterationCount > 0, "iterationCount > 0");

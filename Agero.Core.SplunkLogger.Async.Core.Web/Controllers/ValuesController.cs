@@ -10,7 +10,7 @@ namespace Agero.Core.SplunkLogger.Async.Core.Web.Controllers
         [HttpGet]
         public int Get()
         {
-            var logger = Container.Get<ILoggerAsync>();
+            var logger = Container.Get<IAsyncLogger>();
 
             for (var i = 0; i < 100; i++)
                 logger.Log("Error", $"Error {i}");
@@ -19,6 +19,6 @@ namespace Agero.Core.SplunkLogger.Async.Core.Web.Controllers
         }
 
         [HttpGet("PendingCount")]
-        public int PendingCount() => ((LoggerAsync) Container.Get<ILoggerAsync>()).PendingLogCount;
+        public int PendingCount() => ((AsyncLogger) Container.Get<IAsyncLogger>()).PendingLogCount;
     }
 }

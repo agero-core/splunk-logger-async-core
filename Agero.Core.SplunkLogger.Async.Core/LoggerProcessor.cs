@@ -15,7 +15,7 @@ namespace Agero.Core.SplunkLogger.Async.Core
     /// </summary>
     public class LoggerProcessor : BackgroundService
     {
-        private ILoggerBackgroundTaskQueue _taskQueue => LoggerAsync.LoggerBackgroundTaskQueue;
+        private ILoggerBackgroundTaskQueue _taskQueue => AsyncLogger.LoggerBackgroundTaskQueue;
 
         /// <inheritdoc />
         /// <summary>

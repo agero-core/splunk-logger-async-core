@@ -19,8 +19,8 @@ namespace Agero.Core.SplunkLogger.Async.Core.Web
         {
             var container = ContainerFactory.Create();
 
-            container.RegisterFactoryMethod<ILoggerAsync>(c =>
-                    new LoggerAsync
+            container.RegisterFactoryMethod<IAsyncLogger>(c =>
+                    new AsyncLogger
                     (
                         collectorUri: new Uri(_loggerSetup.SplunkCollectorUrl),
                         authorizationToken: _loggerSetup.AuthenticationToken,
