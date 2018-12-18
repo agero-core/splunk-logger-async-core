@@ -19,8 +19,8 @@ namespace Agero.Core.SplunkLogger.Async.Core.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddHostedService<LoggerProcessor>();
-            services.AddHostedService<LoggerProcessor>();
+            services.AddHostedService<LogProcessingBackgroundService>();
+            services.AddHostedService<LogProcessingBackgroundService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 

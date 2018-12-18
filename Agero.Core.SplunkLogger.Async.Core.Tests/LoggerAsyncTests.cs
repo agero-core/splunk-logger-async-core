@@ -56,8 +56,8 @@ namespace Agero.Core.SplunkLogger.Async.Core.Tests
                 var builder = new HostBuilder()
                     .ConfigureServices((hostContext, services) =>
                     {
-                        services.AddHostedService<LoggerProcessor>();
-                        services.AddHostedService<LoggerProcessor>();
+                        services.AddHostedService<LogProcessingBackgroundService>();
+                        services.AddHostedService<LogProcessingBackgroundService>();
                     }).Build();
 
                 builder.StartAsync();
@@ -84,8 +84,8 @@ namespace Agero.Core.SplunkLogger.Async.Core.Tests
                 var builder = new HostBuilder()
                     .ConfigureServices((hostContext, services) =>
                     {
-                        services.AddHostedService<LoggerProcessor>();
-                        services.AddHostedService<LoggerProcessor>();
+                        services.AddHostedService<LogProcessingBackgroundService>();
+                        services.AddHostedService<LogProcessingBackgroundService>();
                     }).Build();
 
                 builder.StartAsync();

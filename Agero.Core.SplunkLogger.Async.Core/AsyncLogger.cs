@@ -6,8 +6,6 @@ namespace Agero.Core.SplunkLogger.Async.Core
     /// <summary>Asynchronous Splunk Logger</summary>
     public class AsyncLogger : IAsyncLogger
     {
-        internal static readonly LoggerBackgroundTaskQueue LoggerBackgroundTaskQueue = new LoggerBackgroundTaskQueue();
-
         private readonly ILogger _logger;
 
         /// <summary>Constructor</summary>
@@ -28,7 +26,7 @@ namespace Agero.Core.SplunkLogger.Async.Core
         }
 
         /// <summary>Number of items to be processed</summary>
-        public int PendingLogCount => LoggerBackgroundTaskQueue.Count;
+        public int PendingLogCount => LogProcessingBackgroundService.PendingLogCount;
 
         /// <summary>Submits log to Splunk asynchronously</summary>
         /// <param name="type">Log type (Error, Info, etc.)</param>
@@ -37,11 +35,10 @@ namespace Agero.Core.SplunkLogger.Async.Core
         /// <param name="correlationId">Any optional string which can correlate different logs</param>
         public void Log(string type, string message, object data = null, string correlationId = null)
         {
-            LoggerBackgroundTaskQueue.QueueBackgroundWorkItem(async token =>
-                await _logger.LogAsync(type, message, data, correlationId));
+            Check.ArgumentIsNullOrWhiteSpace(type, nameof(type));
+            Check.ArgumentIsNullOrWhiteSpace(message, nameof(message));
+            
+            LogProcessingBackgroundService.AddLogForProcessing(_logger, type, message, data, correlationId);
         }
-
-        /// <summary>Disposes current object</summary>
-        public void Dispose() => LoggerBackgroundTaskQueue.ClearWorkItems();
     }
 }
