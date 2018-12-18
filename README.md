@@ -1,13 +1,12 @@
-
 # Async Splunk Logger
 
-Splunk Logger is a **.NET Core (>= v2.1)** library for logging to Splunk using HTTP collector, **asynchronously**. It automatically collects environment information and adds it to the log.
+Async Splunk Logger is a **.NET Core (>= v2.1)** library for logging to Splunk using HTTP collector, **asynchronously**. It automatically collects environment information and adds it to the log.
 
 The logging is implemented as a background task that uses [hosted services](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/?view=aspnetcore-2.1) introduced in .NET Core.
 
 ## Usage:
 
-Register **LoggerProcessor** in the app's dependency injection container with [ConfigureServices](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/generic-host?view=aspnetcore-2.1#configureservices). If you require multiple background threads running for logging, register additional **LoggerProcessor**'s.
+Register **LogProcessingBackgroundService** in the app's dependency injection container with [ConfigureServices](https://docs.microsoft.com/en-us/aspnet/core/fundamentals/host/generic-host?view=aspnetcore-2.1#configureservices). If you require multiple background threads running for logging, register additional **LogProcessingBackgroundService**'s.
 
 In .NET Core application:
 ```csharp
@@ -16,8 +15,8 @@ var builder =
 		.ConfigureServices((hostContext, services) =>
 		{
 			//Registers two background LoggerProcessor tasks
-			services.AddHostedService<LoggerProcessor>();  
-			services.AddHostedService<LoggerProcessor>(); 
+			services.AddHostedService<LogProcessingBackgroundService>();  
+			services.AddHostedService<LogProcessingBackgroundService>(); 
 		})
 		.Build();
 
@@ -29,15 +28,15 @@ In ASP.NET Core application:
 public void ConfigureServices(IServiceCollection services)
 {
 	//Registers two background LoggerProcessor tasks
-	services.AddHostedService<LoggerProcessor>();
-	services.AddHostedService<LoggerProcessor>();
+	services.AddHostedService<LogProcessingBackgroundService>();
+	services.AddHostedService<LogProcessingBackgroundService>();
 }
 ```
 
 Create instance:
 ```csharp
-ILoggerAsync logger = 
-    new LoggerAsync(
+IAsyncLogger logger = 
+    new AsyncLogger(
         collectorUri: new Uri("<Your Splunk Collector Url>"), 
         authorizationToken: "<Your Splunk Access Token>", 
         applicationName: "TestName", 
