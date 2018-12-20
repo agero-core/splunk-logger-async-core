@@ -1,6 +1,6 @@
-﻿namespace Agero.Core.SplunkLogger.Async.Core.Web
+﻿namespace Agero.Core.SplunkLogger.Async.Core.Tests
 {
-    internal class LoggerAsyncTestsSetup
+    internal class AsyncLoggerTestsSetup
     {
         public string SplunkCollectorUrl { get; set; }
 

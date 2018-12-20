@@ -12,8 +12,8 @@ namespace Agero.Core.SplunkLogger.Async.Core.Web
         private static readonly SyncLazy<IContainer> _container =
             new SyncLazy<IContainer>(CreateContainer);
 
-        private static readonly LoggerAsyncTestsSetup _loggerSetup =
-            JsonConvert.DeserializeObject<LoggerAsyncTestsSetup>(File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "logger-settings.json")));
+        private static readonly AsyncLoggerTestsSetup AsyncLoggerSetup =
+            JsonConvert.DeserializeObject<AsyncLoggerTestsSetup>(File.ReadAllText(Path.Combine(Directory.GetCurrentDirectory(), "logger-settings.json")));
 
         private static IContainer CreateContainer()
         {
@@ -22,8 +22,8 @@ namespace Agero.Core.SplunkLogger.Async.Core.Web
             container.RegisterFactoryMethod<IAsyncLogger>(c =>
                     new AsyncLogger
                     (
-                        collectorUri: new Uri(_loggerSetup.SplunkCollectorUrl),
-                        authorizationToken: _loggerSetup.AuthenticationToken,
+                        collectorUri: new Uri(AsyncLoggerSetup.SplunkCollectorUrl),
+                        authorizationToken: AsyncLoggerSetup.AuthenticationToken,
                         applicationName: "WebTest",
                         applicationVersion: Assembly.GetExecutingAssembly().GetName().Version.ToString(),
                         timeout: 10000
