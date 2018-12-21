@@ -12,7 +12,7 @@ namespace Agero.Core.SplunkLogger.Async.Core
     /// <summary>Background service for log processing</summary>
     public class LogProcessingBackgroundService : BackgroundService
     {
-        private const int QUEUE_READ_TIMEOUT = 1000;
+        private const int QUEUE_READ_TIMEOUT_IN_MILLISECONDS = 1000;
         
         private static readonly BlockingCollection<LogItem> _queue  = new BlockingCollection<LogItem>();
 
@@ -32,7 +32,10 @@ namespace Agero.Core.SplunkLogger.Async.Core
             {
                 try
                 {
-                    if (!_queue.TryTake(out var logItem, millisecondsTimeout: QUEUE_READ_TIMEOUT))
+                    if (_queue.Count == 0)
+                        await Task.Delay(millisecondsDelay: QUEUE_READ_TIMEOUT_IN_MILLISECONDS, cancellationToken: stoppingToken);
+                    
+                    if (!_queue.TryTake(out var logItem, millisecondsTimeout: QUEUE_READ_TIMEOUT_IN_MILLISECONDS))
                         continue;
                 
                     Check.Assert(await logItem.Logger.LogAsync(logItem.Type, logItem.Message, logItem.Data, logItem.CorrelationId), "Log submit failed.");
