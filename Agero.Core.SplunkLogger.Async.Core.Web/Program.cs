@@ -11,7 +11,7 @@ namespace Agero.Core.SplunkLogger.Async.Core.Web
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
+            WebHost.CreateDefaultBuilder(args).UseKestrel()
                 .UseStartup<Startup>();
     }
 }
