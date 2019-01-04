@@ -64,6 +64,7 @@ namespace Agero.Core.SplunkLogger.Async.Core.Tests
 
             // Act
             LogError(logger, 10);
+            Thread.Sleep(10_000);
             builder.StopAsync();
 
             // Assert

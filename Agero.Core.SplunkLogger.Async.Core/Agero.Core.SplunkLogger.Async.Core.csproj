@@ -15,7 +15,7 @@
     <PackageReleaseNotes></PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageIconUrl>https://secure.gravatar.com/avatar/8b6c044292b862f1870550039390f631</PackageIconUrl>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/agero-core/splunk-logger-async-core/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/agero-core/splunk-logger-async-core/master/LICENSE.md</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/agero-core/splunk-logger-async-core.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
