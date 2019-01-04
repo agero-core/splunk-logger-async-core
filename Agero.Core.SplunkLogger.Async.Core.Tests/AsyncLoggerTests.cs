@@ -17,7 +17,7 @@ namespace Agero.Core.SplunkLogger.Async.Core.Tests
         [ClassInitialize]
         public static void LoggerTestsInitialize(TestContext context)
         {
-            Assert.IsTrue(File.Exists(@"logger-settings.json"), "The configuration file logger-settings.json needs to be setup. Please see https://github.com/agero-core/splunk-logger to set it up.");
+            Assert.IsTrue(File.Exists(@"logger-settings.json"), "The configuration file logger-settings.json needs to be setup. Please see https://github.com/agero-core/splunk-logger-async-core to set it up.");
 
             _splunkCollectorInfo = JsonConvert.DeserializeObject<AsyncLoggerTestsSetup>(File.ReadAllText(@"logger-settings.json"));
         }
