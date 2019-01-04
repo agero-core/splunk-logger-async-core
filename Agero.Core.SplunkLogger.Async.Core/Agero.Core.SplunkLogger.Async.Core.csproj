@@ -8,9 +8,9 @@
     <Authors>Core Automation Team</Authors>
     <Company>Agero Inc.</Company>
     <Copyright>Copyright © Agero 2018</Copyright>
-    <Product>SplunkLoggerAsyncCore</Product>
-    <Description>.Net library for logging to Splunk asynchronously</Description>
-    <Title>SplunkLoggerAsyncCore</Title>
+    <Product>SplunkLogger</Product>
+    <Description>.NET Core library for asynchronous logging to Splunk using HTTP collector</Description>
+    <Title>Async Splunk Logger Core</Title>
     <PackageProjectUrl>https://github.com/agero-core/splunk-logger-async-core</PackageProjectUrl>
     <PackageReleaseNotes></PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
