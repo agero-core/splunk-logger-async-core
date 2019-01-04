@@ -26,13 +26,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Agero.Core.Checker">
-      <Version>1.0.11</Version>
-    </PackageReference>
+    <PackageReference Include="Agero.Core.Checker" Version="1.0.11" />
     <PackageReference Include="Agero.Core.DIContainer" Version="1.0.0" />
-    <PackageReference Include="Agero.Core.SplunkLogger">
-      <Version>1.0.10</Version>
-    </PackageReference>
+    <PackageReference Include="Agero.Core.SplunkLogger" Version="1.0.10" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="2.1.1" />
   </ItemGroup>
 
