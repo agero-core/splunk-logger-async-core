@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.1</TargetFrameworks>
+    <PackageId>Agero.Core.SplunkLogger.Async.Core</PackageId>
+    <PackageTags>Logger,Logging,Splunk</PackageTags>
+    <Version>1.0.0</Version>
+    <Authors>Core Automation Team</Authors>
+    <Company>Agero Inc.</Company>
+    <Copyright>Copyright © Agero 2018</Copyright>
+    <Product>SplunkLogger</Product>
+    <Description>.NET Core library for asynchronous logging to Splunk using HTTP collector</Description>
+    <Title>Async Splunk Logger Core</Title>
+    <PackageProjectUrl>https://github.com/agero-core/splunk-logger-async-core</PackageProjectUrl>
+    <PackageReleaseNotes></PackageReleaseNotes>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageIconUrl>https://secure.gravatar.com/avatar/8b6c044292b862f1870550039390f631</PackageIconUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/agero-core/splunk-logger-async-core/master/LICENSE.md</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/agero-core/splunk-logger-async-core.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <RootNamespace>Agero.Core.SplunkLogger.Async.Core</RootNamespace>
+    <AssemblyName>Agero.Core.SplunkLogger.Async.Core</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Agero.Core.Checker" Version="1.0.11" />
+    <PackageReference Include="Agero.Core.SplunkLogger" Version="1.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="2.1.1" />
+  </ItemGroup>
+
+</Project>

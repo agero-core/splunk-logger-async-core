@@ -1,0 +1,17 @@
+.git/
+.idea/
+.vs/
+
+bin/
+obj/
+
+/packages
+/NuGet
+/TestResults
+/wwwroot
+
+*.user
+*.vspscc
+*.DotSettings
+
+*/logger-settings.json
