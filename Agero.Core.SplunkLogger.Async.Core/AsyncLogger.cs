@@ -26,7 +26,7 @@ namespace Agero.Core.SplunkLogger.Async.Core
         }
 
         /// <summary>Number of items to be processed</summary>
-        public int PendingLogCount => LogProcessingBackgroundService.PendingLogCount;
+        public int PendingLogCount => LogQueue.Count;
 
         /// <summary>Submits log to Splunk asynchronously</summary>
         /// <param name="type">Log type (Error, Info, etc.)</param>
@@ -38,7 +38,9 @@ namespace Agero.Core.SplunkLogger.Async.Core
             Check.ArgumentIsNullOrWhiteSpace(type, nameof(type));
             Check.ArgumentIsNullOrWhiteSpace(message, nameof(message));
             
-            LogProcessingBackgroundService.AddLogForProcessing(_logger, type, message, data, correlationId);
+            var log = new LogItem(_logger, type, message, data, correlationId);
+            
+            LogQueue.Add(log);
         }
     }
 }

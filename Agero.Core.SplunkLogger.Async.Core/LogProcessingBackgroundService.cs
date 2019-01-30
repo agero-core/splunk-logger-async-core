@@ -1,25 +1,15 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using Agero.Core.Checker;
 using Microsoft.Extensions.Hosting;
 
-
 namespace Agero.Core.SplunkLogger.Async.Core
 {
     /// <summary>Background service for log processing</summary>
     public class LogProcessingBackgroundService : BackgroundService
     {
-        private const int QUEUE_READ_TIMEOUT_IN_MILLISECONDS = 1000;
-        
-        private static readonly BlockingCollection<LogItem> _queue  = new BlockingCollection<LogItem>();
-
-        internal static void AddLogForProcessing(ILogger logger, string type, string message, object data = null, string correlationId = null) => _queue.Add(new LogItem(logger, type, message, data, correlationId));
-        
-        internal static int PendingLogCount => _queue.Count;
-        
         /// <summary>
         /// This method is called when the <see cref="T:Microsoft.Extensions.Hosting.IHostedService" /> starts. The implementation should return a task that represents
         /// the lifetime of the long running operation(s) being performed.
@@ -32,13 +22,15 @@ namespace Agero.Core.SplunkLogger.Async.Core
             {
                 try
                 {
-                    if (_queue.Count == 0)
-                        await Task.Delay(millisecondsDelay: QUEUE_READ_TIMEOUT_IN_MILLISECONDS, cancellationToken: stoppingToken);
+                    if (LogQueue.Count == 0)
+                        await Task.Delay(millisecondsDelay: LogQueue.QUEUE_READ_TIMEOUT_IN_MILLISECONDS, cancellationToken: stoppingToken);
                     
-                    if (!_queue.TryTake(out var logItem, millisecondsTimeout: QUEUE_READ_TIMEOUT_IN_MILLISECONDS))
+                    if (!LogQueue.TryTake(out var logItem, stoppingToken))
                         continue;
-                
-                    Check.Assert(await logItem.Logger.LogAsync(logItem.Type, logItem.Message, logItem.Data, logItem.CorrelationId), "Log submit failed.");
+
+                    var success = await logItem.Logger.LogAsync(logItem.Type, logItem.Message, logItem.Data, logItem.CorrelationId); 
+                    
+                    Check.Assert(success, "Log submit failed.");
                 }
                 catch (Exception ex)
                 {

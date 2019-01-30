@@ -26,7 +26,6 @@ namespace Agero.Core.SplunkLogger.Async.Core.Tests
         {
             Check.ArgumentIsNullOrWhiteSpace(collectorUrl, nameof(collectorUrl));
 
-
             return new AsyncLogger(
                 collectorUri: new Uri(collectorUrl),
                 authorizationToken: _splunkCollectorInfo.AuthenticationToken,
@@ -54,11 +53,12 @@ namespace Agero.Core.SplunkLogger.Async.Core.Tests
             //Arrange
             var logger = CreateLogger("http://localhost/Wrong/");
             var builder = new HostBuilder()
-                    .ConfigureServices((hostContext, services) =>
-                    {
-                        services.AddHostedService<LogProcessingBackgroundService>();
-                        services.AddHostedService<LogProcessingBackgroundService>();
-                    }).Build();
+                .ConfigureServices((hostContext, services) =>
+                {
+                    services.AddHostedService<LogProcessingBackgroundService>();
+                    services.AddHostedService<LogProcessingBackgroundService>();
+                })
+                .Build();
 
             builder.StartAsync();
 
@@ -82,7 +82,8 @@ namespace Agero.Core.SplunkLogger.Async.Core.Tests
                 {
                     services.AddHostedService<LogProcessingBackgroundService>();
                     services.AddHostedService<LogProcessingBackgroundService>();
-                }).Build();
+                })
+                .Build();
 
             builder.StartAsync();
 

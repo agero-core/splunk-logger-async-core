@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Agero.Core.DIContainer" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.6" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="2.1.1" />
     <ProjectReference Include="..\Agero.Core.SplunkLogger.Async.Core\Agero.Core.SplunkLogger.Async.Core.csproj" />

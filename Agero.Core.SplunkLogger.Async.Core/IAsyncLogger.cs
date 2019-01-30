@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Agero.Core.SplunkLogger.Async.Core
+﻿namespace Agero.Core.SplunkLogger.Async.Core
 {
     /// <summary>Asynchronous Splunk Logger</summary>
     public interface IAsyncLogger
